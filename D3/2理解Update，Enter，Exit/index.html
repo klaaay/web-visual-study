@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="../d3.min.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <p>dog</p>
+  <p>cat</p>
+  <p>pig</p>
+
+  <script>
+    var dataset = [3, 6, 9, 12, 15];
+    var p = d3.select("body").selectAll("p");
+    var updata = p.data(dataset)// 绑定数据，并得到update部分
+    var enter = updata.enter();
+    console.log(enter)
+    updata.text(function (d, i) {
+      return "update: " + d + ",index: " + i;
+    })
+    var pEnter = enter.append("p");
+    pEnter.text(function (d, i) {
+      return "enter" + d + ",index" + i;
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="./vis.min.js"></script>
+    <link rel="stylesheet" href="./vis.min.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="network_id" class="network" style="width:800px;height:800px"></div>
+
+    <script>
+      function init() {
+        // 创建节点对象
+        nodes = new vis.DataSet([]);
+        // 创建连线对象
+        edges = new vis.DataSet([]);
+        // 创建一个网络拓扑图  不要使用jquery获取元素
+        var container = document.getElementById("network_id");
+        var data = { nodes: nodes, edges: edges };
+        //全局设置，每个节点和关系的属性会覆盖全局设置
+        var options = {
+          //设置节点形状
+          nodes: {
+            shape: "image", //采用图片的形式
+            size: 15,
+            font: {
+              face: "Microsoft YaHei"
+            }
+          },
+          // 设置关系连线
+          edges: {
+            font: {
+              face: "Microsoft YaHei"
+            }
+          },
+          //设置节点的相互作用
+          interaction: {
+            //鼠标经过改变样式
+            hover: true,
+            //设置禁止缩放
+            zoomView:true
+          },
+          //力导向图效果
+          physics: {
+            enabled: true,
+            barnesHut: {
+              gravitationalConstant: -8000,
+              centralGravity: 0.3,
+              springLength: 120,
+              springConstant: 0.04,
+              damping: 0.09,
+              avoidOverlap: 0
+            }
+          }
+        };
+        network = new vis.Network(container, data, options);
+      }
+
+      //扩展节点 param nodes和relation集合
+      function createNetwork(param) {
+        //添加节点
+        for (var i = 0; i < param.nodes.length; i++) {
+          var node = param.nodes[i];
+          //除了固定的参数外，可以自己增加额外的参数
+          nodes.add({
+            id: node.id,
+            label: node.label,
+            image: node.image
+          });
+        }
+        //添加关系
+        for (var i = 0; i < param.edges.length; i++) {
+          var edge = param.edges[i];
+          edges.add({
+            id: edge.id,
+            arrows: "to",
+            from: edge.fromNodeId,
+            to: edge.toNodeId,
+            label: edge.label,
+            font: { align: "middle" },
+            length: 150
+          });
+        }
+      }
+
+      //拓扑
+      var network;
+      // 创建节点对象
+      var nodes;
+      // 创建连线对象
+      var edges;
+
+      (function() {
+        init();
+        //修改初始缩放
+        network.moveTo({ scale: 1 });
+        var param = {
+          nodes: [
+            {
+              id: "node1",
+              label: "吴先生",
+              image: "image/man.png"
+            },
+            {
+              id: "node2",
+              label: "庄女士1",
+              image: "image/women.png"
+            },
+            {
+              id: "node3",
+              label: "庄女士2",
+              image: "image/women.png"
+            },
+            {
+              id: "node4",
+              label: "庄女士3",
+              image: "image/women.png"
+            },
+            {
+              id: "node5",
+              label: "庄女士4",
+              image: "image/women.png"
+            }
+          ],
+          edges: [
+            {
+              id: "edge1",
+              fromNodeId: "node1",
+              toNodeId: "node2",
+              label: "卖"
+            },
+            {
+              id: "edge2",
+              fromNodeId: "node1",
+              toNodeId: "node3",
+              label: "了"
+            },
+            {
+              id: "edge3",
+              fromNodeId: "node1",
+              toNodeId: "node4",
+              label: "否"
+            },
+            {
+              id: "edge4",
+              fromNodeId: "node1",
+              toNodeId: "node5",
+              label: "冷"
+            }
+          ]
+        };
+        createNetwork(param);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="../d3.min.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <p>dog</p>
+  <p>cat</p>
+  <p>pig</p>
+  <script>
+    var str = "is an animal";
+    var p = d3.select("body").selectAll("p");
+
+    // dataum
+    // p.datum(str).text(function (d, i) {
+    //   console.log(d)
+    //   return "第" + i + "个元素" + d;
+    // })
+
+    // data
+    var dataset = ["so cute", "cute", "fat"];
+    var p = d3.select("body").selectAll("p");
+
+    p.data(dataset).text((d, i) => `第${i}个动物${d}`)
+  </script>
+</body>
+
+</html>

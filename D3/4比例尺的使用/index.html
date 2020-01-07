@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="../d3.min.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // scaleLinear
+    // var dataset = [1.2, 2.3, 0.9, 1.5, 3.3];
+    // var min = d3.min(dataset);//得到最小值
+    // var max = d3.max(dataset);//得到最大值
+    // var scaleLinear = d3.scaleLinear().domain([min, max]).range([0, 300]);
+    // document.write("scaleLinear(1)输出：" + scaleLinear(1));
+    // d3.select("body").append("br");//换行
+    // document.write("scaleLinear(2)输出：" + scaleLinear(2));
+    // d3.select("body").append("br");
+    // document.write("scaleLinear(3.3)输出：" + scaleLinear(3.3));
+
+    // scaleOrdinal
+    var index = [0, 1, 2, 3, 4];
+    var color = ["red", "blue", "yellow", "black", "green"];
+    var scaleOrdinal = d3.scaleOrdinal()
+      .domain(index)
+      .range(color);
+    document.write("scaleOrdinal(1)输出：" + scaleOrdinal(1));
+    d3.select("body").append("br");//换行
+    document.write("scaleOrdinal(2)输出：" + scaleOrdinal(2));
+    d3.select("body").append("br");
+    document.write("scaleOrdinal(4)输出：" + scaleOrdinal(4));
+  </script>
+</body>
+
+</html>

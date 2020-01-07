@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>vis</title>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="js/vis.js"></script>
+    <link href="css/vis-network.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <style type="text/css">
+		.network {
+            width: 100%;
+            height: 600px;
+            border: 1px solid lightgray;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body >
+	显示节点
+    <input type="checkbox" name="checkbox" checked value="A类"/>A类
+    <input type="checkbox" name="checkbox" checked value="B类"/>B类
+    <input type="checkbox" name="checkbox" checked value="C类"/>C类
+    <div id="network_id" class="network"></div><!-- 拓扑图容器-->
+    <script>
+    	//拓扑
+        var network;
+        // 创建节点对象
+        var nodes;
+        // 创建连线对象
+        var edges;
+        // 已扩展的节点
+        var nodeExtendArr = new Array();
+
+        $(function () {
+            init();
+            //修改初始缩放
+            network.moveTo({scale: 0.8});
+            var nodesArr = new Array();
+            nodesArr.push({
+        		id: 'node1',
+                label: 'A类'
+        	});
+        	nodesArr.push({
+        		id: 'node4',
+                label: 'A类'
+        	});
+        	nodesArr.push({
+        		id: 'node2',
+                label: 'B类'
+        	});
+        	nodesArr.push({
+        		id: 'node5',
+                label: 'B类'
+        	});
+        	nodesArr.push({
+        		id: 'node3',
+                label: 'C类'
+        	});
+        	nodesArr.push({
+        		id: 'node6',
+                label: 'C类'
+        	});
+            var edgesArr = new Array();
+			edgesArr.push({
+        		id: 'edge1',
+                fromNodeId: 'node1',
+                toNodeId: 'node2',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge2',
+                fromNodeId: 'node2',
+                toNodeId: 'node3',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge3',
+                fromNodeId: 'node3',
+                toNodeId: 'node4',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge4',
+                fromNodeId: 'node4',
+                toNodeId: 'node5',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge5',
+                fromNodeId: 'node5',
+                toNodeId: 'node6',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge6',
+                fromNodeId: 'node2',
+                toNodeId: 'node4',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge7',
+                fromNodeId: 'node5',
+                toNodeId: 'node1',
+                label:''
+        	});
+        	edgesArr.push({
+        		id: 'edge8',
+                fromNodeId: 'node2',
+                toNodeId: 'node6',
+                label:''
+        	});
+            var param = {
+				nodes:nodesArr,
+				edges:edgesArr
+            }
+            createNetwork(param);
+            network.on("dragEnd", function(params){
+                if (params.nodes&&params.nodes.length > 0){
+                    network.clustering.updateClusteredNode(params.nodes[0], {physics : false});
+                }
+            });
+        });
+
+        function init(){
+            // 创建节点对象
+            nodes = new vis.DataSet([]);
+            // 创建连线对象
+            edges = new vis.DataSet([]);
+            // 创建一个网络拓扑图  不要使用jquery获取元素
+            var container = document.getElementById('network_id');
+            var data = {nodes: nodes, edges: edges};
+            //全局设置，每个节点和关系的属性会覆盖全局设置
+            var options = {
+                //设置节点形状
+                nodes:{
+                    shape: 'dot',//采用远点的形式
+                    size: 30,
+                    font:{
+                        face:'Microsoft YaHei'
+                    }
+                },
+                // 设置关系连线
+                edges:{
+                    font:{
+                        face:'Microsoft YaHei'
+                    }
+                },
+                //设置节点的相互作用
+                interaction: {
+                    //鼠标经过改变样式
+                    hover: true
+                    //设置禁止缩放
+                    //zoomView:false
+                },
+                //力导向图效果
+                physics: {
+                    enabled: true,
+                    barnesHut: {
+                        gravitationalConstant: -4000,
+                        centralGravity: 0.3,
+                        springLength: 120,
+                        springConstant: 0.04,
+                        damping: 0.09,
+                        avoidOverlap: 0
+                    }
+                }
+            };
+            network = new vis.Network(container, data, options);
+        }
+
+        //扩展节点 param nodes和relation集合
+        function createNetwork(param) {
+            //添加节点
+            for(var i=0;i<param.nodes.length;i++){
+            	var node = param.nodes[i];
+            	//除了固定的参数外，可以自己增加额外的参数
+                nodes.add({
+                    id: node.id,
+                    label: node.label
+                });
+            }
+            //添加关系
+            for(var i=0;i<param.edges.length;i++){
+            	var edge = param.edges[i];
+                edges.add({
+                    id: edge.id,
+                    arrows:'to',
+                    from: edge.fromNodeId,
+                    to: edge.toNodeId,
+                    label:edge.label,
+                    font:{align:"middle"},
+                    length:150
+                });
+            }
+        }
+
+		$('input[type=checkbox][name=checkbox]').change(function(e) {
+            for(var i in network.body.data.nodes._data){
+                if(network.body.data.nodes._data[i].label == e.target.value && !e.currentTarget.checked){
+                    network.clustering.updateClusteredNode(i, {hidden : true});
+                }else{
+                    network.clustering.updateClusteredNode(i, {hidden : false});
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
