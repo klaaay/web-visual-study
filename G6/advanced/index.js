@@ -1,0 +1,1 @@
+export { SelfDefinedBehavior } from "./selfDefinedBehavior";
